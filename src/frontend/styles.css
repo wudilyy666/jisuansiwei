@@ -1,0 +1,227 @@
+/* 全局样式 */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.container {
+    flex: 1;
+}
+
+/* 文件树样式 */
+.file-tree {
+    font-family: monospace;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.file-tree ul {
+    list-style-type: none;
+    padding-left: 1.5rem;
+}
+
+.file-tree li {
+    margin: 0.2rem 0;
+}
+
+.file-tree .file-icon {
+    margin-right: 0.5rem;
+}
+
+.file-tree .dir {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.file-tree .dir:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.file-tree .file {
+    color: #212529;
+    text-decoration: none;
+}
+
+.file-tree .file:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* Mermaid图表容器 */
+.mermaid-container {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    overflow: auto;
+    max-height: 500px;
+}
+
+/* Mermaid图表链接样式 */
+.mermaid a {
+    cursor: pointer;
+}
+
+/* 确保图表中的节点可点击 */
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node ellipse,
+.mermaid .node polygon,
+.mermaid .node path {
+    cursor: pointer;
+}
+
+/* D3.js依赖关系图样式 */
+.dependency-graph-container {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    overflow: auto;
+    height: 600px;
+    position: relative;
+}
+
+.dependency-graph-container svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* D3.js节点和连接线样式 */
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+    fill: #69b3a2;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.node text {
+    font-size: 12px;
+    font-family: sans-serif;
+    fill: #000;
+}
+
+.node.file circle {
+    fill: #4e79a7;
+}
+
+.node.directory circle {
+    fill: #f28e2c;
+}
+
+.node.package circle {
+    fill: #e15759;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}
+
+/* 代码质量分析图表容器 */
+.chart-container {
+    height: 300px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* 图表工具提示 */
+.tooltip {
+    position: absolute;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 5px;
+    pointer-events: none;
+    font-size: 12px;
+    z-index: 1000;
+}
+
+/* 加载动画 */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .mermaid-container, .file-tree, .dependency-graph-container {
+        max-height: 300px;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+}
+
+/* 主题色调整 */
+.btn-primary {
+    background-color: #2a6fc9;
+    border-color: #2a6fc9;
+}
+
+.btn-primary:hover {
+    background-color: #1e5aa8;
+    border-color: #1e5aa8;
+}
+
+/* 美化输入框 */
+.form-control:focus {
+    border-color: #2a6fc9;
+    box-shadow: 0 0 0 0.25rem rgba(42, 111, 201, 0.25);
+}
+
+/* 卡片阴影效果 */
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    transition: box-shadow 0.3s ease;
+}
+
+.shadow-sm:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1) !important;
+}
+
+/* 代码解释按钮 */
+.btn-explain {
+    font-size: 0.75rem;
+    padding: 0.1rem 0.4rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+/* 代码解释模态框内容 */
+#explanationContent {
+    white-space: pre-wrap; /* 保持换行和空格 */
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid #dee2e6;
+}
+
+#explanationContent h1,
+#explanationContent h2,
+#explanationContent h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+#explanationContent code {
+    background-color: #e9ecef;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 85%;
+}
+
+#explanationContent pre {
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 0.25rem;
+} 

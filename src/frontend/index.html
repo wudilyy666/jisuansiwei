@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub项目可视化分析</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- 添加D3.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+</head>
+<body>
+    <div class="container py-4">
+        <header class="pb-3 mb-4 border-bottom">
+            <h1 class="display-5 fw-bold">GitHub项目可视化分析</h1>
+            <p class="lead">输入GitHub仓库URL，AI将为您生成项目结构分析</p>
+        </header>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-12">
+                <div class="p-4 bg-light rounded-3 shadow-sm">
+                    <div class="input-group mb-3">
+                        <input type="text" id="repoUrl" class="form-control" placeholder="输入GitHub仓库URL (例如: https://github.com/username/repo)" aria-label="GitHub仓库URL">
+                        <button class="btn btn-primary" type="button" id="analyzeBtn">分析</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载中提示 -->
+        <div id="loading" class="text-center py-5 d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">加载中...</span>
+            </div>
+            <p class="mt-2">正在分析仓库，请稍候...</p>
+        </div>
+
+        <!-- 错误提示 -->
+        <div id="error" class="alert alert-danger d-none" role="alert">
+        </div>
+
+        <!-- 结果区域 -->
+        <div id="results" class="d-none">
+            <div class="row g-4 mb-4">
+                <!-- 仓库信息 -->
+                <div class="col-md-12">
+                    <div class="p-4 bg-light rounded-3 shadow-sm">
+                        <h2 id="repoName" class="h4 mb-3">仓库名称</h2>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p id="repoDescription" class="text-muted">仓库描述</p>
+                            </div>
+                            <div class="col-md-4">
+                                <ul class="list-unstyled">
+                                    <li><strong>主要语言：</strong> <span id="repoLanguage">-</span></li>
+                                    <li><strong>Stars：</strong> <span id="repoStars">0</span></li>
+                                    <li><strong>Forks：</strong> <span id="repoForks">0</span></li>
+                                    <li><strong>创建时间：</strong> <span id="repoCreated">-</span></li>
+                                    <li><strong>更新时间：</strong> <span id="repoUpdated">-</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <!-- 文件结构 -->
+                <div class="col-md-5">
+                    <div class="p-4 bg-light rounded-3 shadow-sm h-100">
+                        <h3 class="h5 mb-3">文件结构</h3>
+                        <div id="fileStructure" class="file-tree">
+                            <!-- 文件结构将在这里动态生成 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mermaid图表 -->
+                <div class="col-md-7">
+                    <div class="p-4 bg-light rounded-3 shadow-sm h-100">
+                        <h3 class="h5 mb-3">项目结构图</h3>
+                        <div id="mermaidChart" class="mermaid-container">
+                            <!-- Mermaid图表将在这里渲染 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 添加D3.js依赖关系图 -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-12">
+                    <div class="p-4 bg-light rounded-3 shadow-sm">
+                        <h3 class="h5 mb-3">依赖关系图</h3>
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="forceLayoutBtn">力导向图</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="hierarchicalBtn">层次结构图</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="circlePackingBtn">圆形打包图</button>
+                            </div>
+                        </div>
+                        <div id="dependencyGraph" class="dependency-graph-container">
+                            <!-- D3.js依赖关系图将在这里渲染 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 添加代码质量分析 -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-12">
+                    <div class="p-4 bg-light rounded-3 shadow-sm">
+                        <h3 class="h5 mb-3">代码质量分析</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="codeComplexityChart" class="chart-container">
+                                    <!-- 代码复杂度图表 -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="languageDistributionChart" class="chart-container">
+                                    <!-- 语言分布图表 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 代码解释模态框 -->
+    <div class="modal fade" id="explanationModal" tabindex="-1" aria-labelledby="explanationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="explanationModalLabel">代码解释</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="explanationLoading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">加载中...</span>
+                        </div>
+                        <p class="mt-2">正在生成代码解释，请稍候...</p>
+                    </div>
+                    <div id="explanationContent" class="d-none">
+                        <!-- AI生成的解释将显示在这里 -->
+                    </div>
+                    <div id="explanationError" class="alert alert-danger d-none" role="alert">
+                        <!-- 错误信息将显示在这里 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">GitHub项目可视化分析 &copy; 2023</span>
+        </div>
+    </footer>
+
+    <!-- 引入脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="d3-visualizations.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 

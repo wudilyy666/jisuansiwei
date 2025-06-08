@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*env/
+venv/
+.venv/
+pip-wheel-metadata/
+.eggs/
+
+# IDE & OS specific
+.idea/
+.vscode/
+.DS_Store
+*.log
+
+# Node.js / Frontend
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml 
